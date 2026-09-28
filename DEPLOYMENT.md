@@ -1,43 +1,37 @@
 # Thông Tin Deploy — Checkpoint 5
 
-> Điền file này sau khi deploy xong. `pytest tests/test_cp5.py` đọc file này
-> để tìm địa chỉ service của bạn và gọi thử.
->
-> **Chỉ ghi TÊN biến môi trường, tuyệt đối không dán giá trị API key vào đây.**
-> Repo này công khai — dán khóa vào là mất khóa.
-
 ## Thông Tin Học Viên
 
 | Mục | Nội dung |
 |-----|----------|
-| Họ và tên | (điền họ tên) |
-| Mã học viên | (điền mã học viên) |
-| Repo | (điền link repo K4-L3A-DAY12-HoVaTen-MSSV-CloudServicesAndDeployment) |
+| Họ và tên | Trịnh Đức Huy |
+| Mã học viên | 2A202602865 |
+| Repo | https://github.com/huytd2109/K4-L3A-DAY12-TrinhDucHuy-2A202602865-CloudServicesAndDeployment |
 
 ## Service
 
 | Mục | Nội dung |
 |-----|----------|
-| Public URL | https://TODO-thay-bang-url-that.up.railway.app |
-| Platform | Railway / Render / Cloud Run — (điền platform bạn dùng) |
-| Ngày deploy | (điền ngày) |
+| Public URL | https://agent-production-6ffa.up.railway.app |
+| Platform | Railway |
+| Ngày deploy | 2026-09-28 |
+| Region | US West (SFO) |
 
 ## Biến Môi Trường Đã Set Trên Cloud
 
-Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
+Chỉ liệt kê tên biến và nguồn cấp; giá trị secret không nằm trong tài liệu hoặc
+repository.
 
-| Biến | Đã set | Ghi chú |
-|------|--------|---------|
-| `PORT` | ✅ | platform tự gán |
-| `AGENT_API_KEY` | ✅ | đặt trong dashboard, không nằm trong repo |
-| `REDIS_URL` | ✅ | (điền: Redis add-on của platform / Upstash / ...) |
-| `RATE_LIMIT_PER_MINUTE` | ✅ | 10 |
-| `MONTHLY_BUDGET_USD` | ✅ | 10.0 |
-| `LOG_LEVEL` | ✅ | INFO |
+| Biến | Đã set | Nguồn |
+|------|--------|-------|
+| `PORT` | ✅ | Railway tự cấp lúc chạy |
+| `AGENT_API_KEY` | ✅ | Railway service variable, truyền bảo mật qua CLI stdin |
+| `REDIS_URL` | ✅ | Reference variable từ Railway Redis service |
+| `RATE_LIMIT_PER_MINUTE` | ✅ | Railway service variable |
+| `MONTHLY_BUDGET_USD` | ✅ | Railway service variable |
+| `LOG_LEVEL` | ✅ | Railway service variable |
 
 ## Lệnh Kiểm Tra
-
-Thay `<URL>` bằng Public URL ở trên:
 
 ```bash
 # 1. Liveness — mong đợi 200 {"status":"ok"}
@@ -70,32 +64,27 @@ done; echo
 
 ## Kết Quả Chạy Thật
 
-Dán output của các lệnh trên vào đây:
+Kiểm tra từ máy cá nhân sau khi Railway báo deployment thành công:
 
+```text
+HTTP 200
+{"status":"ok","service":"day12-agent","version":"1.0.0"}
+
+HTTP 200
+{"status":"ready","redis":true}
+
+HTTP 401
+{"detail":"invalid or missing API key"}
+
+HTTP 200
+Trả về answer, user_id="sv-test", token và cost_usd.
+
+5. Rate limit
+200 200 200 200 200 200 200 200 200 429 429 429 429 429 429
 ```
-(điền output)
-```
+
+Deployment Railway: `8acbbc46-1c21-433c-bf38-fbb18622a393` — `SUCCESS`.
 
 ## Ảnh Chụp Màn Hình
-
-Đặt ảnh trong thư mục `screenshots/`:
-
 - `screenshots/dashboard.png` — trang quản lý service trên platform
 - `screenshots/health.png` — kết quả gọi `/health` từ trình duyệt hoặc curl
-
----
-
-## Nếu Dùng Phương Án Dự Phòng
-
-Không đăng ký được tài khoản cloud? Vẫn nộp được bài, nhưng CP5 tối đa 60% điểm:
-
-1. Đặt `LOCAL_FALLBACK=true` trong `.env`
-2. Chạy `docker compose up -d` rồi kiểm tra `docker compose ps`
-3. Chụp màn hình vào `screenshots/`
-4. Chạy `pytest tests/test_cp5.py -v` — bộ test sẽ tự chuyển sang kiểm tra
-   `http://localhost:8000`
-5. Ghi rõ lý do không deploy được vào phần dưới đây:
-
-```
-(điền lý do nếu dùng phương án dự phòng, ngược lại xóa mục này)
-```
